@@ -80,14 +80,24 @@ profile librewolf @{librewolf}/.librewolf-real {
   @{sys}/** r,
 
   /dev/dri/** rw,
+  /dev/hidraw* rw,
+  @{run}/udev/data/c* r,
   owner /dev/shm/{org.mozilla.ipc,wayland.mozilla.ipc}.* rw,
 
   owner @{run}/user/@{uid}/ r,
   owner @{run}/user/@{uid}/pipewire-0 rw,
+  owner @{run}/user/@{uid}/wayland-proxy-* rw,
   owner @{run}/user/@{uid}/dconf/** rwk,
 
   owner /tmp/mozilla_*/ rw,
   owner /tmp/mozilla_*/** rwk,
+  owner /tmp/librewolf/ rw,
+  owner /tmp/librewolf/** rwk,
+  owner /tmp/remote-settings-startup-bundle-* rw,
+
+  deny @{run}/dbus/system_bus_socket rw,
+  deny /{,var/}tmp/ r,
+  /dev/ r,
 
   owner @{HOME}/ r,
   owner @{HOME}/.config/librewolf/ rw,
