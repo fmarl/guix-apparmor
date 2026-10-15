@@ -1,0 +1,102 @@
+abi <abi/5.0>,
+
+include <tunables/global>
+
+@{librewolf}=/gnu/store/*-librewolf-*/lib/librewolf
+
+profile librewolf @{librewolf}/.librewolf-real {
+  include <abstractions/base>
+  include <abstractions/audio>
+  include <abstractions/dbus-session-strict>
+  include <abstractions/dri-enumerate>
+  include <abstractions/fonts>
+  include <abstractions/mesa>
+  include <abstractions/nameservice>
+  include <abstractions/vulkan>
+  include <abstractions/wayland>
+
+  capability sys_admin,
+  capability sys_chroot,
+  capability sys_ptrace,
+  userns,
+
+  network inet stream,
+  network inet6 stream,
+  network inet dgram,
+  network inet6 dgram,
+  network netlink raw,
+
+  deny unix peer=(addr="@/tmp/.X11-unix/**"),
+  deny /tmp/.X11-unix/** rw,
+
+  signal (send, receive) peer=librewolf,
+  ptrace (read) peer=librewolf,
+
+  dbus send
+       bus=session
+       path=/org/freedesktop/DBus
+       interface=org.freedesktop.DBus
+       member={RequestName,ReleaseName}
+       peer=(name=org.freedesktop.DBus),
+  dbus bind bus=session name=io.gitlab.librewolf.*,
+  dbus (send, receive)
+       bus=session
+       path=/org/mozilla/librewolf/Remote
+       peer=(label=librewolf),
+  dbus bind bus=session name=org.mpris.MediaPlayer2.firefox.instance_*,
+  dbus (send, receive)
+       bus=session
+       path=/org/mpris/MediaPlayer2
+       peer=(label=unconfined),
+  dbus (send, receive)
+       bus=session
+       path=/org/freedesktop/Notifications
+       interface=org.freedesktop.Notifications
+       peer=(label=unconfined),
+  dbus (send, receive)
+       bus=session
+       path=/org/freedesktop/portal/{desktop,documents}{,/**}
+       peer=(label=unconfined),
+  dbus send
+       bus=session
+       path=/org/freedesktop/ScreenSaver
+       interface=org.freedesktop.ScreenSaver
+       member={Inhibit,UnInhibit}
+       peer=(label=unconfined),
+
+  /gnu/store/** mr,
+  @{librewolf}/.librewolf-real ix,
+  @{librewolf}/gfxtest ix,
+
+  /etc/ r,
+  /etc/{os-release,mime.types,mailcap} r,
+  /etc/ssl/** r,
+  /etc/xdg/** r,
+
+  @{PROC}/ r,
+  owner @{PROC}/@{pid}/** r,
+  owner @{PROC}/@{pid}/{uid_map,gid_map,setgroups,oom_score_adj} w,
+  @{PROC}/sys/** r,
+  @{sys}/** r,
+
+  /dev/dri/** rw,
+  owner /dev/shm/{org.mozilla.ipc,wayland.mozilla.ipc}.* rw,
+
+  owner @{run}/user/@{uid}/ r,
+  owner @{run}/user/@{uid}/pipewire-0 rw,
+  owner @{run}/user/@{uid}/dconf/** rwk,
+
+  owner /tmp/mozilla_*/ rw,
+  owner /tmp/mozilla_*/** rwk,
+
+  owner @{HOME}/ r,
+  owner @{HOME}/.config/librewolf/ rw,
+  owner @{HOME}/.config/librewolf/** rwkl,
+  owner @{HOME}/.cache/librewolf/ rw,
+  owner @{HOME}/.cache/librewolf/** rwkl,
+  owner @{HOME}/.config/{gtk-3.0,fontconfig,dconf}/** r,
+  owner @{HOME}/.config/mimeapps.list r,
+  owner @{HOME}/.local/share/{applications,mime,icons}/** r,
+  owner @{HOME}/@{XDG_DOWNLOAD_DIR}/ r,
+  owner @{HOME}/@{XDG_DOWNLOAD_DIR}/** rwk,
+}
