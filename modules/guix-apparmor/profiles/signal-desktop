@@ -31,6 +31,7 @@ profile signal-desktop @{signal}/signal-desktop flags=(attach_disconnected) {
 
   signal (send, receive) peer=signal-desktop,
   ptrace (read, trace) peer=signal-desktop,
+  deny ptrace (read) peer=unconfined,
 
   dbus send
        bus=session
@@ -103,7 +104,9 @@ profile signal-desktop @{signal}/signal-desktop flags=(attach_disconnected) {
   owner @{HOME}/.config/Signal/** rwkl,
   owner @{HOME}/.config/{gtk-3.0,fontconfig,dconf}/** r,
   owner @{HOME}/.config/mimeapps.list r,
+  owner @{HOME}/.local/share/{applications,mime,icons}/ r,
   owner @{HOME}/.local/share/{applications,mime,icons}/** r,
+  deny owner @{HOME}/.local/share/pki/** rwk,
   owner @{HOME}/@{XDG_DOWNLOAD_DIR}/ r,
   owner @{HOME}/@{XDG_DOWNLOAD_DIR}/** rwk,
 }
