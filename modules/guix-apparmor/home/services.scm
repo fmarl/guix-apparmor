@@ -63,7 +63,8 @@
 (define (dbus-shell-profile config)
   (list (mixed-text-file
          "dbus-ready"
-         "if [ -S \"${XDG_RUNTIME_DIR:-/run/user/$UID}/shepherd/socket\" ]; then"
+         "if [ -S \"${XDG_RUNTIME_DIR:-/run/user/$UID}/shepherd/socket\" ]; \
+then"
          "\n  "
          shepherd-for-home
          "/bin/herd start dbus >/dev/null\n"

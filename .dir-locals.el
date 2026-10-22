@@ -21,4 +21,6 @@
    ;; Record constructors.
    (eval . (put 'origin 'scheme-indent-function 0))
    (eval . (put 'package 'scheme-indent-function 0))
-   (eval . (put 'service-type 'scheme-indent-function 0)))))
+   (eval . (put 'service-type 'scheme-indent-function 0))
+   (eval . (put 'shepherd-service 'scheme-indent-function 0))
+   (eval . (put 'apparmor-configuration 'scheme-indent-function 0)))))

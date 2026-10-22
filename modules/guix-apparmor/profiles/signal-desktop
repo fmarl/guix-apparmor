@@ -107,7 +107,7 @@ profile signal-desktop @{signal}/signal-desktop flags=(attach_disconnected) {
   owner @{HOME}/.local/share/{applications,mime,icons}/ r,
   owner @{HOME}/.local/share/{applications,mime,icons}/** r,
   deny owner @{HOME}/.local/share/pki/** rwk,
-  owner @{HOME}/{@{XDG_DOWNLOAD_DIR},@{XDG_PICTURES_DIR},@{XDG_VIDEOS_DIR}/ r,
-  owner @{HOME}/{@{XDG_PICTURES_DIR},@{XDG_VIDEOS_DIR}/** r,
+  owner @{HOME}/{@{XDG_DOWNLOAD_DIR},@{XDG_PICTURES_DIR},@{XDG_VIDEOS_DIR}}/ r,
+  owner @{HOME}/{@{XDG_PICTURES_DIR},@{XDG_VIDEOS_DIR}}/** r,
   owner @{HOME}/@{XDG_DOWNLOAD_DIR}/** rwk,
 }
