@@ -14,9 +14,12 @@ reconfigure.  Needs Linux 6.17 or later with `apparmor` in `CONFIG_LSM`.
 Loaded profiles that are not in the configuration get removed.
 
 `dbus` rules only work if the session bus runs `dbus-apparmor` from
-`(guix-apparmor packages dbus)`:
+`(guix-apparmor packages dbus)`, as `home-dbus-apparmor-service-type` does.
+Unlike `home-dbus-service-type`, it counts as started only once the bus
+accepts connections, and it starts at login:
 
 ```scheme
-(service home-dbus-service-type
-         (home-dbus-configuration (dbus dbus-apparmor)))
+(use-modules (guix-apparmor home services))
+
+(service home-dbus-apparmor-service-type)
 ```
