@@ -81,7 +81,7 @@ profile librewolf @{librewolf}/.librewolf-real {
 
   /dev/dri/** rw,
   /dev/hidraw* rw,
-  @{run}/udev/data/c* r,
+  @{run}/udev/data/{c*,+input:*} r,
   owner /dev/shm/{org.mozilla.ipc,wayland.mozilla.ipc}.* rw,
 
   owner @{run}/user/@{uid}/ r,
