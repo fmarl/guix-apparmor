@@ -49,9 +49,26 @@ profile signal-desktop @{signal}/signal-desktop flags=(attach_disconnected) {
        path=/org/freedesktop/Notifications
        interface=org.freedesktop.Notifications
        peer=(label=unconfined),
+  dbus send
+       bus=session
+       path=/org/freedesktop/portal/desktop
+       interface=org.freedesktop.portal.{Settings,FileChooser,OpenURI,ScreenCast,Camera,Inhibit}
+       peer=(label=unconfined),
+  dbus send
+       bus=session
+       path=/org/freedesktop/portal/desktop
+       interface=org.freedesktop.DBus.Properties
+       member={Get,GetAll}
+       peer=(label=unconfined),
+  dbus receive
+       bus=session
+       path=/org/freedesktop/portal/desktop
+       member={SettingChanged,PropertiesChanged}
+       peer=(label=unconfined),
   dbus (send, receive)
        bus=session
-       path=/org/freedesktop/portal/{desktop,documents}{,/**}
+       path=/org/freedesktop/portal/desktop/{request,session}/**
+       interface=org.freedesktop.portal.{Request,Session}
        peer=(label=unconfined),
   dbus (send, receive)
        bus=session
@@ -63,6 +80,9 @@ profile signal-desktop @{signal}/signal-desktop flags=(attach_disconnected) {
        interface=org.freedesktop.ScreenSaver
        member={Inhibit,UnInhibit}
        peer=(label=unconfined),
+
+  deny dbus send bus=session path=/org/a11y/bus,
+  deny @{run}/user/@{uid}/at-spi/** rw,
 
   deny @{run}/dbus/system_bus_socket rw,
 
@@ -90,7 +110,6 @@ profile signal-desktop @{signal}/signal-desktop flags=(attach_disconnected) {
   owner @{run}/user/@{uid}/ r,
   owner @{run}/user/@{uid}/pipewire-0 rw,
   owner @{run}/user/@{uid}/dconf/** rwk,
-  owner @{run}/user/@{uid}/doc/** rw,
 
   owner /tmp/.org.chromium.Chromium.*/ rw,
   owner /tmp/.org.chromium.Chromium.*/** rw,

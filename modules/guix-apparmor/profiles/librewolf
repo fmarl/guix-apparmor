@@ -53,9 +53,26 @@ profile librewolf @{librewolf}/.librewolf-real {
        path=/org/freedesktop/Notifications
        interface=org.freedesktop.Notifications
        peer=(label=unconfined),
+  dbus send
+       bus=session
+       path=/org/freedesktop/portal/desktop
+       interface=org.freedesktop.portal.{Settings,FileChooser,OpenURI,ScreenCast,Camera,Inhibit}
+       peer=(label=unconfined),
+  dbus send
+       bus=session
+       path=/org/freedesktop/portal/desktop
+       interface=org.freedesktop.DBus.Properties
+       member={Get,GetAll}
+       peer=(label=unconfined),
+  dbus receive
+       bus=session
+       path=/org/freedesktop/portal/desktop
+       member={SettingChanged,PropertiesChanged}
+       peer=(label=unconfined),
   dbus (send, receive)
        bus=session
-       path=/org/freedesktop/portal/{desktop,documents}{,/**}
+       path=/org/freedesktop/portal/desktop/{request,session}/**
+       interface=org.freedesktop.portal.{Request,Session}
        peer=(label=unconfined),
   dbus send
        bus=session
@@ -64,9 +81,13 @@ profile librewolf @{librewolf}/.librewolf-real {
        member={Inhibit,UnInhibit}
        peer=(label=unconfined),
 
+  deny dbus send bus=session path=/org/a11y/bus,
+  deny @{run}/user/@{uid}/at-spi/** rw,
+
   /gnu/store/** mr,
   @{librewolf}/.librewolf-real ix,
   @{librewolf}/gfxtest ix,
+  deny /gnu/store/*-speech-dispatcher-*/bin/speech-dispatcher x,
 
   /etc/ r,
   /etc/{os-release,mime.types,mailcap} r,
@@ -77,6 +98,7 @@ profile librewolf @{librewolf}/.librewolf-real {
   owner @{PROC}/@{pid}/** r,
   owner @{PROC}/@{pid}/{uid_map,gid_map,setgroups,oom_score_adj} w,
   @{PROC}/sys/** r,
+  deny @{PROC}/pressure/** r,
   @{sys}/** r,
 
   /dev/dri/** rw,
@@ -94,6 +116,9 @@ profile librewolf @{librewolf}/.librewolf-real {
   owner /tmp/librewolf/ rw,
   owner /tmp/librewolf/** rwk,
   owner /tmp/remote-settings-startup-bundle-* rw,
+  owner /tmp/tmp-*.xpi rw,
+  owner /tmp/MozillaBackgroundTask-*/ rw,
+  owner /tmp/MozillaBackgroundTask-*/** rwk,
 
   deny @{run}/dbus/system_bus_socket rw,
   deny /{,var/}tmp/ r,
@@ -106,7 +131,7 @@ profile librewolf @{librewolf}/.librewolf-real {
   owner @{HOME}/.cache/librewolf/** rwkl,
   owner @{HOME}/.config/{gtk-3.0,fontconfig,dconf}/** r,
   owner @{HOME}/.config/mimeapps.list r,
-  owner @{HOME}/.local/share/{applications,mime,icons}/** r,
+  owner @{HOME}/.local/share/{applications,mime,icons}/{,**} r,
   owner @{HOME}/@{XDG_DOWNLOAD_DIR}/ r,
   owner @{HOME}/@{XDG_DOWNLOAD_DIR}/** rwk,
 }
