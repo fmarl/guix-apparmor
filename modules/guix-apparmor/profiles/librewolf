@@ -4,7 +4,7 @@ include <tunables/global>
 
 @{librewolf}=/gnu/store/*-librewolf-*/lib/librewolf
 
-profile librewolf @{librewolf}/.librewolf-real {
+profile librewolf @{librewolf}/.librewolf-real flags=(attach_disconnected, attach_disconnected.path=/disconnected/) {
   include <abstractions/base>
   include <abstractions/audio>
   include <abstractions/dbus-session-strict>
@@ -110,6 +110,11 @@ profile librewolf @{librewolf}/.librewolf-real {
   owner @{run}/user/@{uid}/pipewire-0 rw,
   owner @{run}/user/@{uid}/wayland-proxy-* rw,
   owner @{run}/user/@{uid}/dconf/** rwk,
+
+  /disconnected@{run}/nscd/socket rw,
+  owner /disconnected@{run}/user/@{uid}/pulse/native rw,
+  owner /disconnected@{run}/user/@{uid}/locked/dbus/*/bus rw,
+  owner /disconnected@{run}/user/@{uid}/locked/wayland-context/*/wayland-0 rw,
 
   owner /tmp/mozilla_*/ rw,
   owner /tmp/mozilla_*/** rwk,

@@ -4,7 +4,7 @@ include <tunables/global>
 
 @{signal}=/gnu/store/*-signal-desktop-*/lib/Signal
 
-profile signal-desktop @{signal}/signal-desktop flags=(attach_disconnected) {
+profile signal-desktop @{signal}/signal-desktop flags=(attach_disconnected, attach_disconnected.path=/disconnected/) {
   include <abstractions/base>
   include <abstractions/audio>
   include <abstractions/dbus-session-strict>
