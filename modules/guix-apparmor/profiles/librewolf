@@ -103,6 +103,7 @@ profile librewolf @{librewolf}/.librewolf-real flags=(attach_disconnected, attac
 
   /dev/dri/** rw,
   /dev/hidraw* rw,
+  /dev/fido/hidraw* rw,
   @{run}/udev/data/{c*,+input:*} r,
   owner /dev/shm/{org.mozilla.ipc,wayland.mozilla.ipc}.* rw,
 
